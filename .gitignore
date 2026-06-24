@@ -1,0 +1,7 @@
+ColorPicker.ahk
+DD2_Numpad_record.txt
+error_log.txt
+*.log
+*test*
+*.test
+test_folder/
