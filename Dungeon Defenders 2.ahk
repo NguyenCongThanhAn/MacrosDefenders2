@@ -128,12 +128,12 @@ MainLoop() {
             
             ; Kiểm tra cú pháp xem có đúng dạng Ham(ThamSo) hoặc Ham() không
             if RegExMatch(line, "^([a-zA-Z0-9_]+)\((.*)\)$", &match) {
-                funcName := match    ; Lấy tên hàm
-                funcParam := Trim(match) ; Lấy tham số
+                funcName := match[1]    ; Lấy tên hàm
+                funcParam := Trim(match[2]) ; Lấy tham số
                 
                 ; Kiểm tra hàm có tồn tại trong file code chính không để tránh bị crash
                 if HasFunc(funcName) {
-                    targetFunc := Func(funcName)
+                    targetFunc := %funcName%
                     
                     if (funcParam != "") {
                         if IsInteger(funcParam)
@@ -305,16 +305,15 @@ clickBackground(targetX, targetY) {
     }
 }
 
-$F7:: {
-	if (exitButton.check(gameTarget)) 
-		SoundBeep()
-}
 
 ; Hàm bổ sung để AutoHotkey v2 hiểu được câu lệnh HasFunc()
 HasFunc(funcName) {
     try {
-        return IsObject(Func(funcName))
-    } catch {
-        return false
+        ; Check if the variable name is set in the runtime environment
+        if IsSet(%funcName%) {
+            ; Check if that variable reference is actually a callable function/object
+            return HasMethod(%funcName%)
+        }
     }
+    return false
 }

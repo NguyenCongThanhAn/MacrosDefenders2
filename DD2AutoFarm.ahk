@@ -156,7 +156,7 @@ lookStraightDown() {
 ; NÚT F5: Bật ngầm hoàn toàn, bấm xong Alt-Tab qua Chrome lướt web, game tự cày tự Replay
 $F5:: {
     static toggle := false
-	static shard_streak := 1
+	global shard_streak := 1
     toggle := !toggle
     
     exitClickX := 637, exitClickY := 637
@@ -291,5 +291,5 @@ $F8:: {
 }
 
 $F6:: {
-    shard_streak := true
+    global shard_streak := 3
 }
