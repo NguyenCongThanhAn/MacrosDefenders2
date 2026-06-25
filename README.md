@@ -1,8 +1,7 @@
 # MacrosDefenders2
+
 Some handmade Macros for DD2
 
-# Cách dùng AutoHotKey
-thêm vào
 ## Tải về
 
 Bước 1: Tải AutoHotKey v2.
