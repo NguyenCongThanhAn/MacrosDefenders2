@@ -6,25 +6,25 @@ if !DirExist(macroDir)
     DirCreate(macroDir)
 
 global isRecording := false
-global lastTick := 0
-global macroLines := []
-global currentDirection := ""
+global actionStartTime := 0
+global instructionLog := []
+global currentDir := ""
 
 ; 📋 F9: BẮT ĐẦU / DỪNG GHI
 F9:: {
-    global isRecording, lastTick, macroLines, currentDirection
+    global isRecording, actionStartTime, instructionLog, currentDir
     isRecording := !isRecording
     
     if (isRecording) {
-        macroLines := [] 
-        currentDirection := ""
-        lastTick := A_TickCount
+        instructionLog := [] 
+        currentDir := ""
+        actionStartTime := A_TickCount
         ToolTip("🔴 [RECORDING]...", 10, 10)
         SoundBeep(800, 300)
     } else {
-        if (currentDirection != "") {
-            duration := A_TickCount - lastTick
-            macroLines.Push(currentDirection "(" duration ")")
+        if (currentDir != "") {
+            duration := A_TickCount - actionStartTime
+            instructionLog.Push(currentDir "(" duration ")")
         }
         Send("{w Up}{s Up}{a Up}{d Up}")
         
@@ -38,9 +38,9 @@ F9:: {
 
 ; 💾 HÀM ĐẶT TÊN VÀ XUẤT FILE TEXT
 SaveMacroToFile() {
-    global macroLines, macroDir
+    global instructionLog, macroDir
     
-    if (macroLines.Length == 0) {
+    if (instructionLog.Length == 0) {
         MsgBox("Bạn chưa thực hiện thao tác nào để ghi!", "Thông báo", 48)
         return
     }
@@ -56,7 +56,7 @@ SaveMacroToFile() {
     fullPath := macroDir "\" fileName
     
     fileContent := ""
-    for line in macroLines {
+    for line in instructionLog {
         fileContent .= line "`n"
     }
     
@@ -75,35 +75,35 @@ SaveMacroToFile() {
 
 ; 🧠 LOGIC CHỐT LỆNH NGẦM
 RecordKeyDown(direction) {
-    global isRecording, lastTick, currentDirection, macroLines
+    global isRecording, actionStartTime, currentDir, instructionLog
     if !isRecording
         return
         
-    if (currentDirection != "" && currentDirection != direction) {
-        duration := A_TickCount - lastTick
-        macroLines.Push(currentDirection "(" duration ")")
-        lastTick := A_TickCount
-        SendMovement(currentDirection, "Up")
+    if (currentDir != "" && currentDir != direction) {
+        duration := A_TickCount - actionStartTime
+        instructionLog.Push(currentDir "(" duration ")")
+        actionStartTime := A_TickCount
+        SendMovement(currentDir, "Up")
     }
     
-    if (currentDirection != direction) {
-        currentDirection := direction
+    if (currentDir != direction) {
+        currentDir := direction
         SendMovement(direction, "Down")
     }
 }
 
 RecordKeyUp(direction) {
-    global isRecording, lastTick, currentDirection, macroLines
+    global isRecording, actionStartTime, currentDir, instructionLog
     if !isRecording
         return
         
-    if (currentDirection == direction) {
-        duration := A_TickCount - lastTick
+    if (currentDir == direction) {
+        duration := A_TickCount - actionStartTime
         if (duration > 50) { 
-            macroLines.Push(direction "(" duration ")")
+            instructionLog.Push(direction "(" duration ")")
         }
-        currentDirection := ""
-        lastTick := A_TickCount
+        currentDir := ""
+        actionStartTime := A_TickCount
         SendMovement(direction, "Up")
     }
 }
@@ -145,49 +145,69 @@ z Up::RecordKeyUp("SW")
 
 ; --- CỤM PHÍM THAO TÁC CHỌN TRỤ (4 -> 8) ---
 4:: {
+	FinalizeLastAction()
 	buildNonRotateTower(4)
     RecordKeyDown("")
-    currentDirection := ""
-    macroLines.Push("buildTower(4)")
+    currentDir := ""
+    instructionLog.Push("buildTower(4)")
 }
 5:: {
+	FinalizeLastAction()
 	buildNonRotateTower(5)
     RecordKeyDown("")
-    currentDirection := ""
-    macroLines.Push("buildTower(5)")
+    currentDir := ""
+    instructionLog.Push("buildTower(5)")
 }
 6:: {
+	FinalizeLastAction()
 	buildNonRotateTower(6)
     RecordKeyDown("")
-    currentDirection := ""
-    macroLines.Push("buildTower(6)")
+    currentDir := ""
+    instructionLog.Push("buildTower(6)")
 }
 7:: {
+	FinalizeLastAction()
 	buildNonRotateTower(7)
     RecordKeyDown("")
-    currentDirection := ""
-    macroLines.Push("buildTower(7)")
+    currentDir := ""
+    instructionLog.Push("buildTower(7)")
 }
 8:: {
+	FinalizeLastAction()
 	buildNonRotateTower(8)
     RecordKeyDown("")
-    currentDirection := ""
-    macroLines.Push("buildTower(8)")
+    currentDir := ""
+    instructionLog.Push("buildTower(8)")
 }
 
-; --- CÁC HÀM PHỤ TRỢ ---
 x:: {
+	FinalizeLastAction()
 	lookStraightDown()
     RecordKeyDown("") 
-    currentDirection := "" 
-    macroLines.Push("lookStraightDown()")
+    currentDir := "" 
+    instructionLog.Push("lookStraightDown()")
 }
 
 r:: {
+	FinalizeLastAction()
 	upgrade()
     RecordKeyDown("")
-    currentDirection := ""
-    macroLines.Push("upgrade()")
+    currentDir := ""
+    instructionLog.Push("upgrade()")
+}
+
+; --- CÁC HÀM PHỤ TRỢ ---
+
+FinalizeLastAction() {
+    global currentDir, actionStartTime, instructionLog
+    if (currentDir != "") {
+        duration := A_TickCount - actionStartTime
+        if (duration > 40) {
+            instructionLog.Push({type: "move", dir: currentDir, dur: duration})
+        }
+		SendMovement(currentDir, "Up")
+        currentDir := ""
+    }
 }
 
 #HotIf
@@ -196,7 +216,10 @@ r:: {
 buildNonRotateTower(num) {
     Send(String(num))
     Sleep(414)
-    Click()
+    if WinExist(gameTarget) {
+        WinGetPos(, , &width, &height, gameTarget)
+        Click()
+    }
     Sleep(400)
 }
 
