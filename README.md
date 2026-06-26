@@ -15,7 +15,7 @@ Bước 2: Tải file zip của project này về và giải nén
 - Tạo instruction xây tháp
 - Xây tháp tự động bằng script
 - Tự động nhấn chơi lại
-- Tương thích với nhiều dộ phân giải màn hình
+- Hỗ trợ độ phân giải màn hình 1280x720(default) và 640x420
 
 ## AutoGrinding
 

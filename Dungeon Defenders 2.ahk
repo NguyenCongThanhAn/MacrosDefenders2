@@ -9,20 +9,26 @@ ProcessSetPriority("High")
 global gameTarget := "ahk_class LaunchUnrealUWindowsClient ahk_exe DunDefGame.exe"
 exitButton := GameButton()
 exitButton.add("1280x720", [
-    {X: 568, Y: 646, Color: "0x76BDFC"},
-    {X: 708, Y: 627, Color: "0x6DA5D1"},
-    {X: 626, Y: 637, Color: "0xE5F2FC"}
-], 626, 637)
+    {X: 575, Y: 101, Color: "0xFFFFFF"},
+    {X: 641, Y: 102, Color: "0x010101"},
+    {X: 702, Y: 105, Color: "0x4D4D4D"},
+    {X: 644, Y: 197, Color: "0xFEFEFE"},
+    {X: 638, Y: 637, Color: "0xFEFFFF"}
+], 638, 637)
 exitButton.add("640x480", [
-    {X: 288, Y: 375, Color: "0xF3F9FE"},
-    {X: 316, Y: 375, Color: "0xB2D7F6"},
-    {X: 354, Y: 371, Color: "0x68A6DB"}
-], 354, 371)
+    {X: 287, Y: 107, Color: "0xFFFFFF"},
+    {X: 321, Y: 104, Color: "0xD3D3D3"},
+    {X: 350, Y: 109, Color: "0xA5A5A5"},
+    {X: 331, Y: 159, Color: "0xFBFAF8"},
+    {X: 318, Y: 375, Color: "0xDAECFB"}
+], 318, 375)
 replayButton := GameButton()
 replayButton.add("1280x720", [
-    {X: 361, Y: 194, Color: "0x151618"},
-    {X: 280, Y: 638, Color: "0x24252A"}
-], 786, 639)
+    {X: 244, Y: 639, Color: "0x131414"},
+    {X: 675, Y: 189, Color: "0x171B16"},
+    {X: 993, Y: 176, Color: "0xFFEB00"},
+    {X: 822, Y: 648, Color: "0x737373"}
+], 822, 648)
 replayButton.add("640x480", [
     {X: 128, Y: 381, Color: "0x1A1918"},
     {X: 176, Y: 155, Color: "0x191E1B"}
