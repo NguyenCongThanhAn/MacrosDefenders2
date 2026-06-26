@@ -1,5 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 #Include "GameButton.ahk"
+#Include "ImageChecker.ahk"
 #MaxThreadsPerHotkey 2
 ListLines(0)
 ProcessSetPriority("High")
@@ -18,7 +19,30 @@ exitButton.add("640x480", [
     {X: 354, Y: 371, Color: "0x68A6DB"}
 ], 354, 371)
 replayButton := GameButton()
-
+replayButton.add("1280x720", [
+    {X: 361, Y: 194, Color: "0x151618"},
+    {X: 280, Y: 638, Color: "0x24252A"}
+], 786, 639)
+replayButton.add("640x480", [
+    {X: 128, Y: 381, Color: "0x1A1918"},
+    {X: 176, Y: 155, Color: "0x191E1B"}
+], 392, 380)
+waveEndCheck := GameButton()
+waveEndCheck.add("1280x720", [
+    {X: 1223, Y: 63, Color: "0xB8B8B8"},
+    {X: 1221, Y: 57, Color: "0xF4F4F4"},
+    {X: 1229, Y: 59, Color: "0xFFFFFF"},
+    {X: 1225, Y: 50, Color: "0xFFFFFF"},
+    {X: 1236, Y: 55, Color: "0x000000"},
+    {X: 1212, Y: 54, Color: "0x000000"}
+], 1212, 54)
+waveEndCheck.add("640x480", [
+    {X: 611, Y: 29, Color: "0x212121"},
+    {X: 606, Y: 28, Color: "0x000000"},
+    {X: 618, Y: 28, Color: "0x000000"},
+    {X: 611, Y: 32, Color: "0xFFFFFF"},
+    {X: 611, Y: 25, Color: "0xFFFFFF"}
+], 611, 25)
 
 ; Thay đổi thành cửa sổ còn lại
 global browserTarget := "ahk_class Chrome_WidgetWin_1 ahk_exe chrome.exe" 
@@ -157,7 +181,9 @@ MainLoop() {
         ToolTip("⚠️ CẢNH BÁO: Không có lệnh xây tháp nào được nạp!", 5, 5)
         Sleep(2000)
     }
-    Sleep(500)
+	Send("{g Down}")
+    Sleep(4000)
+	Send("{g Up}")
 
     ; ---------------------------------------------------------------------
     ; TRẢ FOCUS VỀ MÀN HÌNH CŨ CHO BẠN LÀM VIỆC
@@ -208,9 +234,11 @@ Execute_F5_BackgroundSequence() {
         clickBackground(btn.X, btn.Y)
 		}
 		
-        if WinExist(gameTarget) {
-            ControlSend("g", , gameTarget)
-        }
+		if waveEndCheck.check(gameTarget, 0) {
+			Sleep(7000)
+			if (waveEndCheck.check(gameTarget, 0) and WinExist(gameTarget))
+				ControlSend("g", , gameTarget)
+		}
         Sleep(4000)
     }
 }
@@ -296,7 +324,7 @@ clickBackground(targetX, targetY) {
         DllCall("SetCursorPos", "Int", screenX, "Int", screenY)
         Sleep(20) 
         
-        ControlClick(, gameTarget, , "LEFT", 1, "NA Pos")
+        ControlClick(, gameTarget, , "LEFT", 1, "NA")
         Sleep(20)
         
         DllCall("SetCursorPos", "Int", oldX, "Int", oldY)

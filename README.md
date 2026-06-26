@@ -24,7 +24,7 @@ Gồm 2 file là `DD2AutoFarm.ahk` và `Dungeon Defenders 2.ahk`
 - `DD2AutoFarm.ahk`: Gồm các macros riêng lẻ trong các giai đoạn khi treo máy.
 - `Dungeon Defenders 2.ahk`: Gộp toàn bộ macros thành 1 vòng lặp treo máy hoàn toàn, kích hoạt và tắt bằng phím `F1`.
 
-Lưu ý: Cần tắt chức năng Persistent Tower Interaction trong Mục Gameplay của cài đặt game
+Lưu ý: Cần tắt chức năng Persistent Tower Interaction trong Mục Gameplay của cài đặt game và Unikey
 
 ## Build Script
 
